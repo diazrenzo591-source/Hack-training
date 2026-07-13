@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KIOSCO+ // TRAINING GROUND</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #06090a;
+    --bg-panel: #0c1210;
+    --green: #39ff6a;
+    --green-dim: #1e7a3d;
+    --green-glow: #7dffa8;
+    --amber: #ffb454;
+    --red: #ff4d4d;
+    --border: #1c3625;
+    --text: #c9f7d4;
+    --text-dim: #6f9c7e;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0;
+    background: var(--bg);
+    background-image:
+      repeating-linear-gradient(0deg, rgba(57,255,106,0.025) 0px, rgba(57,255,106,0.025) 1px, transparent 1px, transparent 3px);
+    color: var(--text);
+    font-family:'Share Tech Mono', monospace;
+    padding: 0 0 60px 0;
+  }
+  a{ color: var(--green); }
+
+  .scanline-note{
+    text-align:center; font-size:11px; color:var(--text-dim); padding:6px; letter-spacing:1px;
+  }
+
+  header.banner{
+    text-align:center;
+    padding: 28px 16px 18px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  header.banner pre{
+    color: var(--green);
+    text-shadow: 0 0 8px rgba(57,255,106,0.55);
+    font-size: 10px;
+    line-height:1.1;
+    margin:0 0 10px 0;
+    overflow-x:auto;
+  }
+  header.banner h1{
+    font-family:'VT323', monospace;
+    font-size: 34px;
+    letter-spacing: 3px;
+    margin: 6px 0 4px 0;
+    color: var(--green);
+    text-shadow: 0 0 10px rgba(57,255,106,0.5);
+  }
+  header.banner .sub{
+    color: var(--text-dim);
+    font-size: 13px;
+  }
+  .cursor{
+    display:inline-block; width:9px; height:16px; background:var(--green);
+    animation: blink 1s steps(1) infinite; vertical-align:middle; margin-left:4px;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .aviso{
+    max-width: 720px; margin: 18px auto; padding: 14px 18px;
+    border: 1px solid var(--amber); border-radius: 4px;
+    background: rgba(255,180,84,0.06);
+    color: var(--amber);
+    font-size: 12.5px;
+    line-height:1.6;
+  }
+
+  .progreso-wrap{
+    max-width: 720px; margin: 0 auto 24px auto; padding: 0 18px;
+  }
+  .progreso-barra{
+    height: 10px; background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 5px; overflow:hidden; margin-top:6px;
+  }
+  .progreso-fill{
+    height:100%; background: linear-gradient(90deg, var(--green-dim), var(--green));
+    width: 0%; transition: width 0.4s ease;
+  }
+  .progreso-txt{ font-size:12px; color: var(--text-dim); }
+
+  main{ max-width: 760px; margin: 0 auto; padding: 0 18px; }
+
+  .nivel{
+    border: 1px solid var(--border);
+    background: var(--bg-panel);
+    border-radius: 6px;
+    margin-bottom: 22px;
+    overflow:hidden;
+  }
+  .nivel-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    background: rgba(57,255,106,0.04);
+  }
+  .nivel-header h2{
+    font-family:'VT323', monospace; font-size:22px; letter-spacing:1px;
+    color: var(--green); margin:0;
+  }
+  .badge{
+    font-size:11px; padding: 3px 10px; border-radius: 20px; border:1px solid var(--border);
+    color: var(--text-dim);
+  }
+  .badge.superado{ color:#06090a; background: var(--green); border-color:var(--green); font-weight:bold; }
+
+  .nivel-body{ padding: 16px; }
+  .briefing{ font-size: 13px; line-height:1.7; color: var(--text); margin: 0 0 12px 0; }
+  .briefing .real-app{ color: var(--amber); }
+
+  .objetivo{
+    font-size: 12.5px; border-left: 3px solid var(--green); padding: 8px 12px;
+    background: rgba(57,255,106,0.05); margin: 12px 0; line-height:1.6;
+  }
+  .objetivo b{ color: var(--green); }
+
+  .sandbox{
+    background: #040705; border: 1px dashed var(--border); border-radius: 4px;
+    padding: 14px; margin: 14px 0;
+  }
+  .sandbox-label{ font-size:11px; color: var(--text-dim); margin-bottom:8px; letter-spacing:1px; }
+
+  input[type=text], input[type=number]{
+    background: #0a0f0c; border: 1px solid var(--border); color: var(--text);
+    font-family:'Share Tech Mono', monospace; font-size: 13px; padding: 8px 10px;
+    border-radius: 3px; width: 100%; margin-bottom: 8px;
+  }
+  input:focus{ outline:1px solid var(--green); }
+
+  button{
+    font-family:'Share Tech Mono', monospace; font-size: 12.5px; font-weight:bold;
+    padding: 9px 16px; border-radius: 3px; border: 1px solid var(--green-dim);
+    background: rgba(57,255,106,0.08); color: var(--green); cursor:pointer;
+    letter-spacing: 0.5px;
+  }
+  button:hover{ background: rgba(57,255,106,0.18); }
+  button.secundario{ border-color: var(--border); color: var(--text-dim); background:transparent; }
+
+  .cliente-item, .idor-resultado pre{
+    background: #0a0f0c; border:1px solid var(--border); border-radius:3px;
+    padding: 8px 10px; margin-top:6px; font-size: 13px;
+  }
+
+  .estado-linea{ font-size:13px; margin: 10px 0; }
+  .estado-pagado{ color: var(--green); }
+  .estado-no-pagado{ color: var(--red); }
+
+  .flag-panel{
+    margin-top: 12px; padding: 10px 12px; border: 1px solid var(--green);
+    background: rgba(57,255,106,0.08); color: var(--green-glow);
+    font-size: 13px; border-radius: 4px;
+  }
+  .oculto{ display:none !important; }
+
+  .captura{
+    margin-top: 14px; display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .captura input{ flex:1; min-width:180px; margin-bottom:0; }
+  .captura-msg{ font-size:12.5px; margin-top:8px; }
+  .captura-msg.ok{ color: var(--green); }
+  .captura-msg.error{ color: var(--red); }
+
+  details{
+    margin-top: 12px; border:1px solid var(--border); border-radius:4px; overflow:hidden;
+  }
+  details summary{
+    cursor:pointer; padding: 9px 12px; font-size:12.5px; color: var(--text-dim);
+    background: rgba(255,255,255,0.02);
+  }
+  details[open] summary{ color: var(--amber); }
+  details .contenido{ padding: 10px 14px 14px 14px; font-size: 12.5px; line-height:1.7; color: var(--text); }
+  details .contenido code{ color: var(--amber); }
+  details .fix{ border-color: var(--green-dim); }
+
+  footer{
+    text-align:center; color: var(--text-dim); font-size:11.5px; margin-top: 30px; line-height:1.8;
+  }
+  .final-msg{
+    display:none; max-width: 720px; margin: 20px auto; padding: 18px;
+    border: 1px solid var(--green); border-radius:6px; text-align:center;
+    background: rgba(57,255,106,0.06); color: var(--green-glow); font-size:14px; line-height:1.8;
+  }
+  .final-msg.show{ display:block; }
+</style>
+</head>
+<body>
+
+<header class="banner">
+<pre>
+ _  ___                    _
+| |/ (_) ___  ___  ___ ___ | |
+| ' /| |/ _ \/ __|/ __/ _ \| |
+| . \| | (_) \__ \ (_| (_) |_|
+|_|\_\_|\___/|___/\___\___/(_)   +  T R A I N I N G   G R O U N D
+</pre>
+<h1>KIOSCO+ // TRAINING GROUND<span class="cursor"></span></h1>
+<div class="sub">guest@kiosco-training:~$ practicá lo que aprendiste sobre las vulnerabilidades reales de la app</div>
+</header>
+
+<div class="aviso">
+  ⚠ Esta página es tuya, aislada, hecha con las mismas fallas (ya corregidas) del kiosco real, para que las practiques
+  sin riesgo. No hay datos reales de nadie acá — todo lo que ves es de mentira. La idea es que entiendas el
+  <b>por qué</b> de cada arreglo que ya está en tu app de verdad, atacándolo vos mismo primero. No repliques estas
+  técnicas contra sitios que no sean tuyos: ahí sí es ilegal, acá es tu propio laboratorio.
+</div>
+
+<div class="progreso-wrap">
+  <div class="progreso-txt">Progreso: <span id="progreso-num">0</span> / 5 niveles superados</div>
+  <div class="progreso-barra"><div class="progreso-fill" id="progreso-fill"></div></div>
+</div>
+
+<main>
+
+  <!-- ============ NIVEL 1: XSS ============ -->
+  <div class="nivel" id="nivel-L1">
+    <div class="nivel-header">
+      <h2>NIVEL 1 // Cross-Site Scripting (XSS)</h2>
+      <span class="badge" id="badge-L1">bloqueado</span>
+    </div>
+    <div class="nivel-body">
+      <p class="briefing">
+        En la primera versión del kiosco, cuando cargabas un cliente al fiado, su nombre se insertaba
+        directo en la página sin ningún filtro. Si alguien escribía código en vez de un nombre, ese código
+        se ejecutaba en el navegador. <span class="real-app">En la app real esto se arregló con una función
+        <code>escapeHtml()</code> que "neutraliza" cualquier código antes de mostrarlo.</span>
+      </p>
+      <div class="sandbox">
+        <div class="sandbox-label">SANDBOX // Alta de cliente (versión vulnerable, sin escapeHtml)</div>
+        <input type="text" id="l1-input" placeholder="Nombre del cliente...">
+        <button onclick="agregarClienteL1()">Agregar cliente</button>
+        <div id="l1-lista"></div>
+      </div>
+      <div class="objetivo">
+        <b>Objetivo:</b> lograr que se ejecute código JavaScript a través del campo "Nombre del cliente",
+        de forma que se llame a la función <code>capturarFlag('L1')</code>. Si lo lográs, va a aparecer la flag abajo sola.
+      </div>
+      <div id="l1-flag-panel" class="flag-panel oculto"></div>
+      <details>
+        <summary>💡 Pista</summary>
+        <div class="contenido">
+          El campo se inserta con <code>innerHTML</code>, no con texto plano. Un tag de imagen con un atributo
+          <code>onerror</code> se ejecuta apenas el navegador intenta cargarla y falla. Probá algo como:<br>
+          <code>&lt;img src=x onerror="capturarFlag('L1')"&gt;</code>
+        </div>
+      </details>
+      <details class="fix">
+        <summary>🛡 Cómo se arregla (la versión real)</summary>
+        <div class="contenido">
+          En vez de <code>innerHTML = nombre</code>, se pasa el nombre por una función que reemplaza los
+          caracteres peligrosos (<code>&lt; &gt; " ' &amp;</code>) por su versión "de texto", así el navegador
+          los muestra como letras y no como código. Es exactamente el <code>escapeHtml()</code> que le agregamos
+          a los nombres de cliente, producto y detalle de fiado en la app real.
+        </div>
+      </details>
+      <div class="captura">
+        <input type="text" id="input-flag-L1" placeholder="Pegá la flag encontrada...">
+        <button onclick="validarFlag('L1')">Enviar flag</button>
+      </div>
+      <div class="captura-msg" id="msg-L1"></div>
+    </div>
+  </div>
+
+  <!-- ============ NIVEL 2: AUTORIZACION SOLO DEL LADO DEL CLIENTE ============ -->
+  <div class="nivel" id="nivel-L2">
+    <div class="nivel-header">
+      <h2>NIVEL 2 // Autorización solo del lado del cliente</h2>
+      <span class="badge" id="badge-L2">bloqueado</span>
+    </div>
+    <div class="nivel-body">
+      <p class="briefing">
+        Este panel decide quién es "administrador" mirando un dato guardado en tu propio navegador
+        (<code>localStorage</code>). El problema: ese dato lo controlás vos mismo, no un servidor.
+        <span class="real-app">Es el mismo tipo de chequeo que usa el sistema de licencias del kiosco real
+        (bloquear un kiosco que no pagó) — por eso ahí mismo te explicamos que es una protección liviana,
+        no a prueba de balas.</span>
+      </p>
+      <div class="sandbox">
+        <div class="sandbox-label">SANDBOX // Panel de administrador</div>
+        <div id="l2-panel-bloqueado">🔒 ACCESO DENEGADO — no sos administrador</div>
+        <div id="l2-panel-admin" class="oculto flag-panel"></div>
+      </div>
+      <div class="objetivo">
+        <b>Objetivo:</b> conseguir acceso de administrador sin que exista ningún botón de "login" en esta página.
+      </div>
+      <details>
+        <summary>💡 Pista</summary>
+        <div class="contenido">
+          Abrí la consola del navegador (F12 → pestaña "Console") y escribí:<br>
+          <code>localStorage.setItem('l2_esAdmin', 'true')</code><br>
+          El panel se actualiza solo, sin necesidad de recargar la página.
+        </div>
+      </details>
+      <details class="fix">
+        <summary>🛡 Cómo se arregla (el concepto real)</summary>
+        <div class="contenido">
+          La regla de oro: <b>nunca confiar en un dato que vive del lado del navegador para decidir permisos
+          importantes</b>. Un servidor real tiene que validar la identidad con algo que el usuario no pueda
+          tocar (una sesión, un token firmado). En el kiosco real, por eso el chequeo de licencias solo
+          <i>bloquea con un cartel</i> (una molestia, no una caja fuerte) — no maneja nada crítico como plata o
+          datos de otros. Para algo realmente sensible (como el backend de Mercado Pago), la clave
+          (<code>APP_SHARED_SECRET</code>) vive en el servidor, no en el navegador.
+        </div>
+      </details>
+      <div class="captura">
+        <input type="text" id="input-flag-L2" placeholder="Pegá la flag encontrada...">
+        <button onclick="validarFlag('L2')">Enviar flag</button>
+      </div>
+      <div class="captura-msg" id="msg-L2"></div>
+    </div>
+  </div>
+
+  <!-- ============ NIVEL 3: SECRETOS EN EL CODIGO FUENTE ============ -->
+  <div class="nivel" id="nivel-L3">
+    <div class="nivel-header">
+      <h2>NIVEL 3 // Secretos expuestos en el código fuente</h2>
+      <span class="badge" id="badge-L3">bloqueado</span>
+    </div>
+    <div class="nivel-body">
+      <p class="briefing">
+        Todo lo que le llega al navegador — HTML, CSS, JavaScript — lo puede leer cualquiera, aunque no se
+        muestre en pantalla. Guardar una clave secreta "escondida" en el código del frontend no la esconde
+        realmente. <span class="real-app">Por eso el Access Token de Mercado Pago nunca vive en la app —
+        vive únicamente en el backend, en variables de entorno que el navegador jamás llega a descargar.</span>
+      </p>
+      <div class="sandbox">
+        <div class="sandbox-label">SANDBOX // Esta página tiene un secreto escondido en su propio código</div>
+        <p style="font-size:12.5px; color:var(--text-dim);">
+          No hay ningún botón para este nivel. La vulnerabilidad ya está en el código de esta misma página,
+          esperando a que la encuentres.
+        </p>
+      </div>
+      <div class="objetivo">
+        <b>Objetivo:</b> encontrar la flag mirando el código fuente de esta página.
+      </div>
+      <details>
+        <summary>💡 Pista</summary>
+        <div class="contenido">
+          Click derecho → "Ver código fuente de la página" (o Ctrl+U). Buscá con Ctrl+F la palabra
+          <code>CONFIG_INTERNA</code>.
+        </div>
+      </details>
+      <details class="fix">
+        <summary>🛡 Cómo se arregla (el concepto real)</summary>
+        <div class="contenido">
+          Ninguna clave, contraseña o token va en código que se le manda al navegador — ni en el HTML, ni en
+          el JS, ni siquiera "ofuscado" o en un comentario. Si algo necesita una clave secreta para funcionar
+          (como llamar a la API de Mercado Pago), esa llamada la tiene que hacer el <b>servidor</b>, no el
+          navegador del kiosquero.
+        </div>
+      </details>
+      <div class="captura">
+        <input type="text" id="input-flag-L3" placeholder="Pegá la flag encontrada...">
+        <button onclick="validarFlag('L3')">Enviar flag</button>
+      </div>
+      <div class="captura-msg" id="msg-L3"></div>
+    </div>
+  </div>
+  <!-- CONFIG_INTERNA - NO TOCAR
+    API_KEY_INTERNA = "esto-nunca-deberia-estar-aca"
+    FLAG_NIVEL_3 = "KIOSCO{nunca_pongas_secretos_en_el_frontend}"
+  -->
+
+  <!-- ============ NIVEL 4: IDOR ============ -->
+  <div class="nivel" id="nivel-L4">
+    <div class="nivel-header">
+      <h2>NIVEL 4 // Referencia insegura a objetos (IDOR)</h2>
+      <span class="badge" id="badge-L4">bloqueado</span>
+    </div>
+    <div class="nivel-body">
+      <p class="briefing">
+        Esta mini-pantalla te muestra los datos de una cuenta según un ID que vos mismo escribís, sin
+        verificar si esa cuenta es realmente tuya. <span class="real-app">Es el error clásico que evitamos en
+        el sistema de licencias: cada kiosco solo debería poder ver o afectar su propia información, nunca la
+        de otro, sin importar qué ID escriba.</span>
+      </p>
+      <div class="sandbox">
+        <div class="sandbox-label">SANDBOX // Ver cuenta por ID</div>
+        <input type="text" id="l4-id" value="1">
+        <button onclick="verCuentaL4()">Ver cuenta</button>
+        <div id="l4-resultado" class="idor-resultado"></div>
+      </div>
+      <div class="objetivo">
+        <b>Objetivo:</b> tu cuenta es la <code>1</code>. Conseguí ver los datos de una cuenta que no es la tuya.
+      </div>
+      <details>
+        <summary>💡 Pista</summary>
+        <div class="contenido">
+          Probá cambiar el número del campo por otros valores cercanos, como <code>2</code> o <code>3</code>.
+        </div>
+      </details>
+      <details class="fix">
+        <summary>🛡 Cómo se arregla (el concepto real)</summary>
+        <div class="contenido">
+          Cada pedido de datos tiene que verificar del lado del servidor "¿esta persona tiene permiso de ver
+          <i>este</i> ID en particular?" — no alcanza con que el ID exista. En un sistema con login real, eso
+          se resuelve comparando el ID pedido contra el ID de la sesión autenticada del usuario, no confiando
+          en lo que el navegador mande.
+        </div>
+      </details>
+      <div class="captura">
+        <input type="text" id="input-flag-L4" placeholder="Pegá la flag encontrada...">
+        <button onclick="validarFlag('L4')">Enviar flag</button>
+      </div>
+      <div class="captura-msg" id="msg-L4"></div>
+    </div>
+  </div>
+
+  <!-- ============ NIVEL 5: CONFIAR CIEGAMENTE EN EL CLIENTE ============ -->
+  <div class="nivel" id="nivel-L5">
+    <div class="nivel-header">
+      <h2>NIVEL 5 // Confiar ciegamente en avisos externos</h2>
+      <span class="badge" id="badge-L5">bloqueado</span>
+    </div>
+    <div class="nivel-body">
+      <p class="briefing">
+        Esta es una compra simulada de $5000. El botón "Comprar" debería ser el único camino para que la
+        compra quede marcada como pagada. <span class="real-app">Esto es un espejo del webhook de Mercado
+        Pago: antes de agregarle la validación de firma, cualquiera podía mandarle a tu backend un aviso
+        falso de "ya se pagó" sin haber pagado nada.</span>
+      </p>
+      <div class="sandbox">
+        <div class="sandbox-label">SANDBOX // Compra simulada</div>
+        <button onclick="intentarComprarL5()">Comprar ($5000 — simulado)</button>
+        <div class="estado-linea">Estado: <span id="l5-estado" class="estado-no-pagado">🔴 NO PAGADO</span></div>
+        <div id="l5-flag-panel" class="flag-panel oculto"></div>
+      </div>
+      <div class="objetivo">
+        <b>Objetivo:</b> lograr que el estado pase a "PAGADO" <i>sin</i> tocar el botón "Comprar".
+      </div>
+      <details>
+        <summary>💡 Pista</summary>
+        <div class="contenido">
+          El botón "Comprar" en realidad llama a una función interna. Esa misma función quedó accesible
+          desde la consola del navegador, como si fuera un endpoint sin protección. Probá escribir en la
+          consola: <code>confirmarPagoL5()</code>
+        </div>
+      </details>
+      <details class="fix">
+        <summary>🛡 Cómo se arregla (la versión real)</summary>
+        <div class="contenido">
+          En el backend real, el webhook de Mercado Pago ahora valida una <b>firma criptográfica</b>
+          (<code>x-signature</code>) antes de creerle a cualquier aviso de pago. Esa firma se calcula con una
+          clave secreta que solo Mercado Pago y tu servidor conocen — nadie puede fabricar un aviso falso sin
+          esa clave, a diferencia de esta versión de juguete, donde "confirmar el pago" es una función abierta
+          que cualquiera puede llamar.
+        </div>
+      </details>
+      <div class="captura">
+        <input type="text" id="input-flag-L5" placeholder="Pegá la flag encontrada...">
+        <button onclick="validarFlag('L5')">Enviar flag</button>
+      </div>
+      <div class="captura-msg" id="msg-L5"></div>
+    </div>
+  </div>
+
+</main>
+
+<div class="final-msg" id="final-msg">
+  🏁 Superaste los 5 niveles. Ya entendés de memoria — porque lo hiciste con tus propias manos — los mismos
+  problemas que le arreglamos al kiosco real: XSS, autorización débil, secretos filtrados, IDOR, y confiar
+  ciegamente en avisos externos. La próxima vez que armes algo, hacete la pregunta: "¿qué pasa si alguien le
+  manda a esto exactamente lo que yo no espero que le manden?"
+</div>
+
+<footer>
+  guest@kiosco-training:~$ _ &nbsp;|&nbsp; hecho para practicar, no para lastimar a nadie
+</footer>
+
+<script>
+  const FLAGS = {
+    L1: 'KIOSCO{xss_nunca_confies_en_el_input}',
+    L2: 'KIOSCO{nunca_confies_en_el_cliente}',
+    L3: 'KIOSCO{nunca_pongas_secretos_en_el_frontend}',
+    L4: 'KIOSCO{idor_nunca_confies_en_el_id}',
+    L5: 'KIOSCO{sin_firma_no_hay_confianza}',
+  };
+
+  let superados = JSON.parse(localStorage.getItem('training_superados') || '[]');
+
+  function actualizarProgreso(){
+    document.getElementById('progreso-num').textContent = superados.length;
+    document.getElementById('progreso-fill').style.width = (superados.length / 6 * 100) + '%';
+    Object.keys(FLAGS).forEach(nivel => {
+      const badge = document.getElementById('badge-' + nivel);
+      if(superados.includes(nivel)){
+        badge.textContent = 'superado ✔';
+        badge.classList.add('superado');
+      }
+    });
+    document.getElementById('final-msg').classList.toggle('show', superados.length === 6);
+  }
+
+  function marcarSuperado(nivel){
+    if(!superados.includes(nivel)){
+      superados.push(nivel);
+      localStorage.setItem('training_superados', JSON.stringify(superados));
+      actualizarProgreso();
+    }
+  }
+
+  function validarFlag(nivel){
+    const input = document.getElementById('input-flag-' + nivel);
+    const msg = document.getElementById('msg-' + nivel);
+    const valor = input.value.trim();
+    if(valor === FLAGS[nivel]){
+      msg.textContent = '✔ Flag correcta. Nivel superado.';
+      msg.className = 'captura-msg ok';
+      marcarSuperado(nivel);
+    }else{
+      msg.textContent = '✘ Esa no es la flag de este nivel. Seguí intentando.';
+      msg.className = 'captura-msg error';
+    }
+  }
+
+  // ---------------- NIVEL 1: XSS ----------------
+  function agregarClienteL1(){
+    const nombre = document.getElementById('l1-input').value;
+    const lista = document.getElementById('l1-lista');
+    const div = document.createElement('div');
+    div.className = 'cliente-item';
+    div.innerHTML = '<span>' + nombre + '</span>'; // vulnerable a propósito: sin escapeHtml
+    lista.appendChild(div);
+  }
+  window.capturarFlag = function(nivel){
+    const panel = document.getElementById('l1-flag-panel');
+    panel.textContent = '🚩 ' + FLAGS.L1;
+    panel.classList.remove('oculto');
+  };
+
+  // ---------------- NIVEL 2: auth solo del lado del cliente ----------------
+  function chequearAccesoL2(){
+    const esAdmin = localStorage.getItem('l2_esAdmin') === 'true';
+    document.getElementById('l2-panel-bloqueado').classList.toggle('oculto', esAdmin);
+    const panelAdmin = document.getElementById('l2-panel-admin');
+    panelAdmin.classList.toggle('oculto', !esAdmin);
+    if(esAdmin) panelAdmin.textContent = '✅ Acceso concedido. 🚩 ' + FLAGS.L2;
+  }
+  setInterval(chequearAccesoL2, 700);
+  chequearAccesoL2();
+
+  // ---------------- NIVEL 4: IDOR ----------------
+  const L4_DB = {
+    1: { nombre: 'Vos', deuda: 500, notas: 'Tu cuenta normal, nada especial acá.' },
+    2: { nombre: 'Kiosco Rival S.A.', deuda: 999999, notas: '🚩 ' + FLAGS.L4 },
+    3: { nombre: 'Cuenta de otro usuario', deuda: 1200, notas: 'Tampoco es tuya, esta.' },
+  };
+  function verCuentaL4(){
+    const id = document.getElementById('l4-id').value.trim();
+    const datos = L4_DB[id];
+    const resultado = document.getElementById('l4-resultado');
+    resultado.innerHTML = datos
+      ? '<pre>' + JSON.stringify(datos, null, 2) + '</pre>'
+      : '<pre>No existe esa cuenta.</pre>';
+  }
+
+  // ---------------- NIVEL 5: confiar ciegamente en avisos externos ----------------
+  let pagadoL5 = false;
+  function actualizarEstadoL5(){
+    const estado = document.getElementById('l5-estado');
+    const panel = document.getElementById('l5-flag-panel');
+    if(pagadoL5){
+      estado.textContent = '🟢 PAGADO';
+      estado.className = 'estado-pagado';
+      panel.textContent = '🚩 ' + FLAGS.L5;
+      panel.classList.remove('oculto');
+    }
+  }
+  function intentarComprarL5(){
+    // Esta es la version "legitima": en el kiosco real, esto dispararia
+    // el flujo de pago de verdad, y solo Mercado Pago podria confirmar
+    // el cobro (con la firma). Ac\u00e1, a proposito, no hace nada por si sola.
+    alert('Simulando pasarela de pago... (esto no confirma nada por si solo, alguien tiene que "avisar" que se pag\u00f3)');
+  }
+  // Esta funcion queda expuesta sin ninguna proteccion, como un webhook
+  // sin validar firma: cualquiera puede llamarla desde la consola.
+  window.confirmarPagoL5 = function(){
+    pagadoL5 = true;
+    actualizarEstadoL5();
+  };
+
+  // ---------------- NIVEL 6: bypass del bloqueo por licencia ----------------
+  document.getElementById('l6-flag-text').textContent = FLAGS.L6;
+
+  function chequearOverlayL6(){
+    const activo = localStorage.getItem('l6_activo') === 'true';
+    const overlay = document.getElementById('l6-overlay');
+    if(overlay) overlay.classList.toggle('oculto', activo);
+  }
+  setInterval(chequearOverlayL6, 700);
+  chequearOverlayL6();
+
+  // Detecta tambien si el overlay fue borrado a mano desde el inspector
+  // (mismo efecto que quitarlo por localStorage: el contenido de abajo
+  // ya estaba ahi, nunca estuvo realmente protegido).
+  const observadorL6 = new MutationObserver(() => {
+    const overlayExiste = !!document.getElementById('l6-overlay');
+    if(!overlayExiste) marcarSuperado('L6');
+  });
+  observadorL6.observe(document.getElementById('nivel-L6'), { childList:true, subtree:true });
+
+  actualizarProgreso();
+</script>
+</body>
+</html>
